@@ -1,0 +1,55 @@
+@model dynamic
+@{
+    Layout = "_Layout";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm p-4">
+        <h3 class="fw-bold text-warning">CHỈNH SỬA THÔNG TIN</h3>
+        
+        <form action="/Admin/Update" method="post">
+           <!-- Đã khớp với BookingId trong Model của Trâm -->
+           <input type="hidden" name="id" value="@Model.BookingId" />
+
+            <div class="mb-3">
+                <label>Tên khách hàng</label>
+                <!-- Sửa Model.Name thành Model.CustomerName -->
+                <input type="text" name="name" class="form-control" value="@Model.CustomerName">
+            </div>
+            
+            <div class="mb-3">
+                <label>Số điện thoại</label>
+                <input type="text" name="phone" class="form-control" value="@Model.Phone">
+            </div>
+
+            <div class="mb-3">
+                <label>Giá tiền</label>
+                <input type="number" name="price" class="form-control" value="@Model.Price">
+            </div>
+
+            <div class="mb-3">
+                <label class="fw-bold">Trạng thái</label>
+                <select name="status" class="form-control">
+                    @{
+                        // Chuyển sang string để kiểm tra trạng thái
+                        string currentStatus = Model.Status?.ToString() ?? "";
+                    }
+                    
+                    @if (currentStatus == "Đã thanh toán")
+                    {
+                        <option value="Chưa thanh toán">Chưa thanh toán</option>
+                        <option value="Đã thanh toán" selected>Đã thanh toán</option>
+                    }
+                    else
+                    {
+                        <option value="Chưa thanh toán" selected>Chưa thanh toán</option>
+                        <option value="Đã thanh toán">Đã thanh toán</option>
+                    }
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+            <a href="/Admin/Dashboard" class="btn btn-secondary">Quay lại</a>
+        </form>
+    </div>
+</div>

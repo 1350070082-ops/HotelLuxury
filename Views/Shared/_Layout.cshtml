@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Hotel Luxury Gió Biển</title>
+    
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    
+    <style>
+        .navbar-brand { font-size: 1.5rem; letter-spacing: 1px; }
+        .nav-link:hover { color: #0d6efd !important; }
+        .btn-admin { border-radius: 20px; transition: 0.3s; }
+        .btn-admin:hover { background-color: #212529; color: white !important; }
+        /* Style cho logo sóng biển */
+        .bi-tsunami { color: #0d6efd; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid px-4">
+                <!-- SỬA: Logo về trang chủ khách (Home/Index) -->
+                <a class="navbar-brand fw-bold text-primary" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-tsunami me-2"></i>GIÓ BIỂN
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <!-- SỬA: Trang chủ dẫn về Home thay vì Admin -->
+                            <a class="nav-link text-dark fw-medium" asp-controller="Home" asp-action="Index">Trang chủ</a>
+                        </li>
+                        <li class="nav-item">
+                            <!-- SỬA: Đặt phòng dẫn về trang Booking -->
+                            <a class="nav-link text-dark fw-medium" asp-controller="Booking" asp-action="Index">Đặt phòng ngay</a>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <!-- Nút dẫn vào khu vực Admin -->
+                            <a class="btn btn-outline-dark btn-sm btn-admin d-flex align-items-center px-3 py-2 shadow-sm" 
+                               asp-controller="Admin" asp-action="Login">
+                                <i class="bi bi-person-workspace me-2"></i>
+                                <span>Khu vực Admin</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted bg-light mt-5">
+        <div class="container text-center py-3">
+            &copy; 2026 - <strong>Khách sạn Gió Biển</strong> - Uy tín & Sang trọng
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

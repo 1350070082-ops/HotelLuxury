@@ -1,0 +1,57 @@
+@model dynamic
+@{
+    ViewData["Title"] = "Xác nhận đặt phòng";
+    
+    // Lấy dữ liệu từ ViewBag, nếu trống thì dùng giá trị mặc định để tránh lỗi 0đ
+    var customerName = ViewBag.CustomerName ?? "Khách hàng";
+    var phone = ViewBag.Phone ?? "";
+    var roomName = ViewBag.RoomName ?? "Standard Room";
+    var price = ViewBag.Price ?? 0;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="card shadow-lg border-0 p-5">
+                <div class="mb-4">
+                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" style="width:100px; margin: 0 auto;">
+                        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" stroke="#28a745" stroke-width="2"/>
+                        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" stroke="#28a745" stroke-width="3"/>
+                    </svg>
+                </div>
+
+                <h2 class="text-success fw-bold mb-3">ĐẶT PHÒNG THÀNH CÔNG!</h2>
+                <p class="lead text-muted">Cảm ơn <strong>@customerName</strong>, hệ thống đang hoàn tất hóa đơn cho bạn.</p>
+                <div class="spinner-border text-success mb-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="text-muted small">Vui lòng chờ giây lát để quay lại trang chủ khách sạn Gió Biển...</p>
+
+                <!-- FORM ẨN: Gửi dữ liệu về AdminController xử lý lưu trữ -->
+                <form id="autoConfirmForm" action="/Admin/Confirm" method="post" style="display:none;">
+                    <input type="hidden" name="CustomerName" value="@customerName" />
+                    <input type="hidden" name="Phone" value="@phone" />
+                    <input type="hidden" name="RoomName" value="@roomName" />
+                    <input type="hidden" name="Price" value="@price" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Chờ 2 giây để khách thấy dấu tích xanh rồi mới submit form
+    setTimeout(function() {
+        document.getElementById("autoConfirmForm").submit();
+    }, 2000);
+</script>
+
+<style>
+    /* Hiệu ứng tích xanh mượt mà */
+    .checkmark__circle { stroke-dasharray: 166; stroke-dashoffset: 166; animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards; }
+    .checkmark { border-radius: 50%; display: block; stroke-width: 2; stroke: #fff; stroke-miterlimit: 10; box-shadow: inset 0px 0px 0px #28a745; animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both; }
+    .checkmark__check { transform-origin: 50% 50%; stroke-dasharray: 48; stroke-dashoffset: 48; animation: stroke 0.3s ease-in-out 0.8s forwards; }
+    @@keyframes stroke { 100% { stroke-dashoffset: 0; } }
+    @@keyframes scale { 0%, 100% { transform: none; } 50% { transform: scale3d(1.1, 1.1, 1); } }
+    @@keyframes fill { 100% { box-shadow: inset 0px 0px 0px 50px #fff; } }
+</style>

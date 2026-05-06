@@ -1,0 +1,54 @@
+@{
+    ViewData["Title"] = "Danh sách phòng - Hotel Luxury";
+    
+    var roomTypes = new List<dynamic> {
+        new { Name = "Deluxe Room", Image = "phong-deluxe.jpg", Price = 1200000 },
+        new { Name = "President Suite", Image = "phong-president-suite.jpg", Price = 5000000 },
+        new { Name = "Standard Room", Image = "phong-STD.jpg", Price = 800000 },
+        new { Name = "Superior Room", Image = "phong-Superior.jpg", Price = 1500000 }
+    };
+}
+
+<style>
+    .five-columns-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+        padding: 20px 0;
+    }
+
+    @@media (max-width: 1200px) {
+        .five-columns-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @@media (max-width: 768px) {
+        .five-columns-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+</style>
+
+<div class="five-columns-grid">
+    @foreach (var type in roomTypes)
+    {
+        @for (int i = 1; i <= 5; i++) 
+        {
+            var roomNumber = (roomTypes.IndexOf(type) + 1) * 100 + i;
+            var fullRoomName = type.Name + " #" + roomNumber;
+            
+            <div class="card shadow-sm border-0">
+                <img src="/images/rooms/@type.Image" class="card-img-top" alt="@type.Name" style="height: 160px; object-fit: cover;">
+                <div class="card-body d-flex flex-column p-3">
+                    <h6 class="card-title text-dark fw-bold mb-1">@type.Name</h6>
+                    <p class="card-text mb-1 small text-muted">Mã: LUX-@roomNumber</p>
+                    <p class="card-text text-danger fw-bold mb-3">@type.Price.ToString("N0") VNĐ</p>
+                    
+                    @* SỬA TẠI ĐÂY: Thay thẻ <form> bằng thẻ <a> để dẫn qua trang Checkout *@
+                    <div class="mt-auto">
+                        <a href="/Booking/Checkout?roomName=@fullRoomName&price=@type.Price" 
+                           class="btn btn-primary btn-sm w-100 shadow-sm">
+                           Đặt ngay
+                        </a>
+                    </div>
+                </div> 
+            </div> 
+        }
+    }
+</div>

@@ -1,0 +1,136 @@
+@using HotelLuxuryWeb.Models
+@model IEnumerable<Booking>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Bảng điều khiển Admin - Gió Biển";
+}
+
+<div class="container mt-4">
+    <!-- Tiêu đề thống kê -->
+    <div class="mb-4">
+        <h2 class="fw-bold text-primary"><i class="bi bi-bar-chart-fill"></i> BẢNG THỐNG KÊ KINH DOANH</h2>
+        <hr>
+    </div>
+
+    <!-- Hàng thẻ thống kê (Top Cards) -->
+    <div class="row g-3 mb-5">
+        <div class="col-md-3">
+            <div class="card bg-success text-white text-center p-3 shadow border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-uppercase">Tổng Doanh Thu</h6>
+                    <h3 class="fw-bold">@String.Format("{0:N0}", ViewBag.TotalRevenue) VNĐ</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-primary text-white text-center p-3 shadow border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-uppercase">Tổng Số Đơn Đặt</h6>
+                    <h3 class="fw-bold">@ViewBag.TotalOrders</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark text-center p-3 shadow border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-uppercase">Phòng Trống</h6>
+                    <h3 class="fw-bold">@ViewBag.AvailableRooms</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white text-center p-3 shadow border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-uppercase">Tổng Số Phòng</h6>
+                    <h3 class="fw-bold">20</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BIỂU ĐỒ DOANH THU -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow border-0 p-4">
+                <h5 class="fw-bold text-muted mb-3"><i class="bi bi-graph-up"></i> BIỂU ĐỒ DOANH THU (THEO THÁNG)</h5>
+                <div style="height: 300px;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bảng danh sách chi tiết -->
+    <div class="card shadow border-0 mb-5">
+        <div class="card-header bg-dark text-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-list-stars"></i> DANH SÁCH ĐẶT PHÒNG GẦN ĐÂY</h5>
+                <a href="@Url.Action("Logout", "Admin")" class="btn btn-sm btn-danger">Đăng xuất</a>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Khách Hàng</th>
+                        <th>SĐT</th>
+                        <th>Loại Phòng</th>
+                        <th>Giá Tiền</th>
+                        <th>Trạng Thái</th>
+                        <th class="text-center">Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>#@item.BookingId</td>
+                            <!-- SỬA TẠI ĐÂY: Dùng CustomerName thay vì Name -->
+                            <td class="fw-bold">@item.CustomerName</td>
+                            <td>@item.Phone</td>
+                            <!-- SỬA TẠI ĐÂY: Dùng RoomName thay vì Room -->
+                            <td><span class="badge bg-info text-dark">@item.RoomName</span></td>
+                            <td>@String.Format("{0:N0}", item.Price)</td>
+                            <td>
+                                <span class="badge @(item.Status == "Đã thanh toán" ? "bg-success" : "bg-warning")">
+                                    @item.Status
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <a href="@Url.Action("Edit", "Admin", new { id = item.BookingId })" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i> Sửa</a>
+                                <a href="@Url.Action("Delete", "Admin", new { id = item.BookingId })" class="btn btn-sm btn-outline-danger" onclick="return confirm('Xóa khách này?')"><i class="bi bi-trash"></i> Xóa</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPT VẼ BIỂU ĐỒ -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var ctx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5'],
+                datasets: [{
+                    label: 'Doanh thu thực tế (VNĐ)',
+                    data: [4200000, 5800000, 3900000, @ViewBag.TotalRevenue], 
+                    backgroundColor: 'rgba(13, 110, 253, 0.6)',
+                    borderColor: 'rgba(13, 110, 253, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    });
+</script>

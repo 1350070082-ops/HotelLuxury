@@ -1,0 +1,87 @@
+@{
+    ViewData["Title"] = "Thông tin đặt phòng - Hotel Luxury";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-0">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h4 class="mb-0 fw-bold">THÔNG TIN ĐẶT PHÒNG</h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-info mb-4">
+                        Bạn đang đặt: <strong>@ViewBag.RoomName</strong> <br />
+                        Giá tiền: <strong class="text-danger">@ViewBag.Price VNĐ/đêm</strong>
+                    </div>
+
+                    <form action="@Url.Action("Confirm", "Booking")" method="post">
+                        <!-- PHẦN THÊM MỚI: Truyền dữ liệu ẩn về Controller -->
+                        <input type="hidden" name="RoomName" value="@ViewBag.RoomName" />
+                        <input type="hidden" name="Price" value="@ViewBag.Price" />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Họ và tên khách hàng</label>
+                                <input type="text" class="form-control" name="CustomerName" placeholder="Nguyễn Văn A" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Số điện thoại</label>
+                                <input type="tel" class="form-control" name="Phone" placeholder="090xxxxxxx" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Ngày nhận phòng</label>
+                                <input type="date" class="form-control" name="CheckInDate" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Ngày trả phòng</label>
+                                <input type="date" class="form-control" name="CheckOutDate" required>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h5 class="fw-bold mb-3">Phương thức thanh toán</h5>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="PaymentMethod" id="payCash" value="Tiền mặt" checked onclick="toggleQR(false)">
+                            <label class="form-check-label" for="payCash">Thanh toán tiền mặt tại quầy</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="radio" name="PaymentMethod" id="payQR" value="Chuyển khoản" onclick="toggleQR(true)">
+                            <label class="form-check-label" for="payQR">Chuyển khoản qua mã QR</label>
+                        </div>
+
+                        <!-- Phần hiển thị mã QR ẩn/hiện -->
+                        <div id="qrSection" class="text-center d-none border p-3 rounded bg-light">
+                            <p class="small text-muted">Vui lòng quét mã QR bên dưới để thanh toán</p>
+                            <!-- ĐÃ CHỈNH SỬA: Nội dung QR kèm tên phòng -->
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Thanh+toan+phong+@ViewBag.RoomName" 
+                                 alt="QR Code Thanh Toán" class="img-fluid mb-2" style="max-width: 200px;">
+                            <p class="fw-bold text-primary mb-0">Chủ TK: Tran Bao Tram </p>
+                            <p class="small">Số TK: 123456789 - Ngân hàng VietinBank</p>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-success btn-lg">Xác nhận đặt phòng</button>
+                            <a href="@Url.Action("Index", "Booking")" class="btn btn-outline-secondary">Quay lại</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleQR(show) {
+        const qrSection = document.getElementById('qrSection');
+        if (show) {
+            qrSection.classList.remove('d-none');
+        } else {
+            qrSection.classList.add('d-none');
+        }
+    }
+</script>
